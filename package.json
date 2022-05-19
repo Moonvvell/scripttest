@@ -1,7 +1,7 @@
 {
   "name": "scripttest",
-  "version": "0.2.1",
-  "versionCode": 12,
+  "version": "1.0.0",
+  "versionCode": 13,
   "main": "index.js",
   "repository": "https://github.com/Moonvvell/scripttest.git",
   "author": "ihor.kyryliuk",

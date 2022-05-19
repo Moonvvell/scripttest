@@ -21,4 +21,5 @@ fs.writeFile('./package.json', JSON.stringify(packageFile), (err) => {
         return;
     }
     updateVersion();
+    console.log('Package.json was updated')
 })

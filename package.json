@@ -1,13 +1,13 @@
 {
   "name": "scripttest",
-  "version": "1.0.0",
-  "versionCode": 13,
+  "version": "1.0.2",
+  "versionCode": 15,
   "main": "index.js",
   "repository": "https://github.com/Moonvvell/scripttest.git",
   "author": "ihor.kyryliuk",
   "license": "MIT",
   "scripts": {
     "updateVersion": "node update-version.js",
-    "updateBranches": "git push && echo Version was updated && git checkout staging && git merge main && git push"
+    "updateBranches": "git push && echo Version was updated && git checkout staging && git merge main && git push && git checkout main"
   }
 }

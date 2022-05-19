@@ -8,6 +8,6 @@
   "license": "MIT",
   "scripts": {
     "updateVersion": "node update-version.js",
-    "updateBranches": " && git push && echo Version was updated && git checkout staging && git merge main && git push"
+    "updateBranches": "git push && echo Version was updated && git checkout staging && git merge main && git push"
   }
 }

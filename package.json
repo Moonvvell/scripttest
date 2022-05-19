@@ -1,0 +1,12 @@
+{
+  "name": "scripttest",
+  "version": "0.0.2",
+  "versionCode": 2,
+  "main": "index.js",
+  "repository": "https://github.com/Moonvvell/scripttest.git",
+  "author": "ihor.kyryliuk",
+  "license": "MIT",
+  "scripts": {
+    "updateVersion": "node update-version.js"
+  }
+}

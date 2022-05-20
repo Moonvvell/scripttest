@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const {exec} = require('shelljs');
+const {exec, exit} = require('shelljs');
 let packageFile = require('./package.json')
 packageFile.versionCode++
 

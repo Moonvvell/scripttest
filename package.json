@@ -1,13 +1,17 @@
 {
   "name": "scripttest",
-  "version": "1.0.3",
-  "versionCode": 16,
+  "version": "1.0.4",
+  "versionCode": 17,
   "main": "index.js",
   "repository": "https://github.com/Moonvvell/scripttest.git",
   "author": "ihor.kyryliuk",
   "license": "MIT",
   "scripts": {
     "updateVersion": "node update-version.js",
-    "updateBranches": "git pull && git push && echo Version was updated && git checkout staging && git merge main && git push && git checkout main"
+    "updateBranches": "git commit -m \"Version commit\" && git push && echo Code was pushed to main && git checkout staging && git merge main && git push && echo Code was merged to staging && git checkout main"
+  },
+  "dependencies": {
+    "@types/shelljs": "^0.8.11",
+    "shelljs": "^0.8.5"
   }
 }

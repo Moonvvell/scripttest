@@ -6,12 +6,12 @@ packageFile.versionCode++
 
 const updateVersion = () => {
     let versionUpdateType = process.argv.slice(2)[0]
-    if (versionUpdateType === undefined) {
-        exec('yarn version --patch')
-    } else if (versionUpdateType === 'minor') {
+    if (versionUpdateType === 'minor') {
         exec('yarn version --minor')
     } else if (versionUpdateType === 'major') {
         exec('yarn version --major')
+    } else {
+        exec('yarn version --patch')
     }
 }
 

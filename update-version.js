@@ -16,6 +16,8 @@ const updateVersion = () => {
 }
 
 const updateGit = () => {
+    exec('git config user.email "ciemail"')
+    exec('git config user.name "ci"')
     exec("git push");
     console.info('Code was pushed to main');
     exec("git checkout staging");

@@ -1,25 +1,37 @@
 const fs = require('fs');
 
+const {exec, exit} = require('shelljs');
 let packageFile = require('./package.json')
-const {exec} = require("child_process");
 packageFile.versionCode++
 
 const updateVersion = () => {
     let versionUpdateType = process.argv.slice(2)[0]
-    if (versionUpdateType === undefined) {
-        exec('yarn version --patch')
-    } else if (versionUpdateType === 'minor') {
+    if (versionUpdateType === 'minor') {
         exec('yarn version --minor')
     } else if (versionUpdateType === 'major') {
         exec('yarn version --major')
+    } else {
+        exec('yarn version --patch')
     }
+}
+
+const updateGit = () => {
+    exec("git push");
+    console.info('Code was pushed to main');
+    exec("git checkout staging");
+    exec("git merge main");
+    exec("git push");
+    console.info('Code was merged into staging')
+    exec("git checkout main");
 }
 
 fs.writeFile('./package.json', JSON.stringify(packageFile), (err) => {
     if (err) {
         console.error(err)
-        return;
+        exit(1)
     }
     updateVersion();
-    console.log('Package.json was updated')
+    console.info('Package.json was updated')
+    updateGit();
+    exit(0)
 })

@@ -12,9 +12,14 @@ const runExecCommand = (command) => {
     }
 }
 
-const updateVersion = () => {
+const initGit = () => {
     runExecCommand('git config user.email "ciemail"')
     runExecCommand('git config user.name "ci"')
+    runExecCommand('git fetch')
+}
+
+const updateVersion = () => {
+    initGit()
     let versionUpdateType = process.argv.slice(2)[0]
     if (versionUpdateType === 'minor') {
         exec('yarn version --minor')

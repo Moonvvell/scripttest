@@ -15,21 +15,30 @@ const updateVersion = () => {
     }
 }
 
+const runExecCommand = (command)=> {
+    const execCommand = exec(command, {silent: true});
+    if (execCommand.code !== 0){
+        console.error(execCommand.stderr)
+        exit(1)
+    }
+}
+
 const updateGit = () => {
-    exec('git config user.email "ciemail"')
-    exec('git config user.name "ci"')
-    exec("git push");
+    runExecCommand('git config user.email "ciemail"')
+    runExecCommand('git config user.name "ci"')
+    runExecCommand("git push")
     console.info('Code was pushed to main');
-    exec("git checkout staging");
-    exec("git merge main");
-    exec("git push");
+    runExecCommand("git checkout staging")
+    runExecCommand("git merge main")
+    runExecCommand("git push")
     console.info('Code was merged into staging')
-    exec("git checkout main");
+    runExecCommand("git checkout main")
 }
 
 fs.writeFile('./package.json', JSON.stringify(packageFile), (err) => {
     if (err) {
         console.error(err)
+        runExecCommand('git reset --hard')
         exit(1)
     }
     updateVersion();

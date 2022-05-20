@@ -4,7 +4,17 @@ const {exec, exit} = require('shelljs');
 let packageFile = require('./package.json')
 packageFile.versionCode++
 
+const runExecCommand = (command) => {
+    const execCommand = exec(command, {silent: true});
+    if (execCommand.code !== 0) {
+        console.error(execCommand.stderr)
+        exit(1)
+    }
+}
+
 const updateVersion = () => {
+    runExecCommand('git config user.email "ciemail"')
+    runExecCommand('git config user.name "ci"')
     let versionUpdateType = process.argv.slice(2)[0]
     if (versionUpdateType === 'minor') {
         exec('yarn version --minor')
@@ -15,17 +25,7 @@ const updateVersion = () => {
     }
 }
 
-const runExecCommand = (command)=> {
-    const execCommand = exec(command, {silent: true});
-    if (execCommand.code !== 0){
-        console.error(execCommand.stderr)
-        exit(1)
-    }
-}
-
 const updateGit = () => {
-    runExecCommand('git config user.email "ciemail"')
-    runExecCommand('git config user.name "ci"')
     runExecCommand("git push")
     console.info('Code was pushed to main');
     runExecCommand("git checkout staging")

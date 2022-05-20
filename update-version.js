@@ -34,7 +34,8 @@ const updateGit = () => {
     runExecCommand("git push")
     console.info('Code was pushed to main');
     runExecCommand("git checkout staging")
-    runExecCommand("git merge --allow-unrelated-histories main")
+    runExecCommand("git pull origin main --allow-unrelated-histories")
+    runExecCommand("git merge main")
     runExecCommand("git push")
     console.info('Code was merged into staging')
     runExecCommand("git checkout main")

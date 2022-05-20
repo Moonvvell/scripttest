@@ -7,7 +7,7 @@ packageFile.versionCode++
 const runExecCommand = (command) => {
     const execCommand = exec(command, {silent: true});
     if (execCommand.code !== 0) {
-        console.error(execCommand.stderr)
+        console.error(`Command failed: ${command}: ${execCommand.stderr}`)
         exit(1)
     }
 }

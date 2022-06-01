@@ -1,25 +1,26 @@
 const fs = require('fs');
 
 const {exec, exit} = require('shelljs');
-let packageFile = require('./package.json')
-packageFile.versionCode++
+
+const MAIN_BRANCH = 'main';
+const MERGE_INTO_BRANCH = 'staging';
 
 const runExecCommand = (command) => {
+    console.info(`Running command: ${command}`)
     const execCommand = exec(command, {silent: true});
     if (execCommand.code !== 0) {
         console.error(`Command failed: ${command}: ${execCommand.stderr}`)
         exit(1)
     }
+    return execCommand.stdout
 }
 
-const initGit = () => {
-    runExecCommand('git config user.email "ciemail"')
-    runExecCommand('git config user.name "ci"')
+const updateGitRemotes = () => {
+    runExecCommand('git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"')
     runExecCommand('git fetch')
 }
 
-const updateVersion = () => {
-    initGit()
+const updatePackageJsonVersion = () => {
     let versionUpdateType = process.argv.slice(2)[0]
     if (versionUpdateType === 'minor') {
         exec('yarn version --minor')
@@ -30,25 +31,37 @@ const updateVersion = () => {
     }
 }
 
-const updateGit = () => {
+const updateCodeRepository = () => {
+    runExecCommand('git push')
+    runExecCommand('git fetch')
+    runExecCommand(`git checkout ${MERGE_INTO_BRANCH}`)
+    runExecCommand(`git merge ${MAIN_BRANCH} --allow-unrelated-histories`)
     runExecCommand("git push")
-    console.info('Code was pushed to main');
-    runExecCommand("git checkout staging")
-    runExecCommand("git fetch")
-    runExecCommand("git merge main --allow-unrelated-histories")
-    runExecCommand("git push")
-    console.info('Code was merged into staging')
-    runExecCommand("git checkout main")
 }
 
-fs.writeFile('./package.json', JSON.stringify(packageFile), (err) => {
-    if (err) {
+const updatePackageJsonVersionCode = () => {
+    let packageFile = require('./package.json')
+    packageFile.versionCode++
+    try {
+        fs.writeFileSync('./package.json', JSON.stringify(packageFile), 'utf-8');
+    } catch (err) {
         console.error(err)
         runExecCommand('git reset --hard')
         exit(1)
     }
-    updateVersion();
-    console.info('Package.json was updated')
-    updateGit();
-    exit(0)
-})
+}
+
+const ensureRunOnlyOnMasterBranch = () => {
+    const runBranch = runExecCommand('git rev-parse --abbrev-ref HEAD')
+    if (runBranch.trim() !== MAIN_BRANCH.trim()) {
+        console.info(`You tried to run script on ${runBranch} branch. It should be run only on ${MAIN_BRANCH}`)
+        exit(0);
+    }
+}
+
+ensureRunOnlyOnMasterBranch();
+updateGitRemotes();
+updatePackageJsonVersionCode();
+updatePackageJsonVersion();
+updateCodeRepository();
+exit(0)
